@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statify - Media Pembelajaran Statistika Interaktif</title>
+  <style>
+    /* IMPORT GOOGLE FONTS */
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700;800&display=swap');
+
+    /* CSS VARIABLES UNTUK KUSTOMISASI DESAIN MONOKROM */
+    :root {
+      --bg-primary: #121212;
+      --bg-card: #1e1e1e;
+      --bg-card-hover: #2a2a2a;
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --border-color: #3f3f46;
+      --accent-black: #000000;
+      --accent-white: #ffffff;
+      --accent-gray: #71717a;
+      --accent-light: #e4e4e7;
+      --correct-color: #27272a;
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-body);
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* STATISTICAL DECORATION ICONS BACKGROUND */
+    .bg-icon {
+      position: absolute;
+      opacity: 0.04;
+      font-weight: bold;
+      user-select: none;
+      pointer-events: none;
+      color: var(--accent-white);
+      font-family: var(--font-heading);
+    }
+    .bg-1 { top: 10px; right: 20px; font-size: 80px; }
+    .bg-2 { bottom: 10px; left: 20px; font-size: 100px; }
+
+    /* HEADER & NAVIGATION */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+    .brand {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-tag {
+      font-family: var(--font-body);
+      font-size: 11px;
+      background: var(--accent-light);
+      color: var(--accent-black);
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+
+    .page {
+      display: none;
+      animation: fadeIn 0.4s ease-in-out forwards;
+    }
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1, h2, h3 {
+      font-family: var(--font-heading);
+      color: var(--text-main);
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+    p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+
+    /* BUTTONS */
+    .btn {
+      font-family: var(--font-heading);
+      background: var(--accent-white);
+      color: var(--accent-black);
+      border: none;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+    }
+    .btn:disabled {
+      background: var(--border-color);
+      color: var(--accent-gray);
+      cursor: not-allowed;
+      transform: none;
+      opacity: 0.6;
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+    }
+
+    /* COVER PAGE */
+    .cover-content {
+      text-align: center;
+      padding: 40px 10px;
+    }
+    .cover-title {
+      font-family: var(--font-heading);
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .cover-subtitle {
+      font-size: 18px;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+      font-weight: 500;
+    }
+
+    /* MENU GRID */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .menu-card {
+      background: var(--bg-card-hover);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 25px 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .menu-card:hover:not(.locked) {
+      border-color: var(--accent-white);
+      transform: translateY(-4px);
+    }
+    .menu-card.locked {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .menu-card .badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 12px;
+    }
+
+    /* TABLES */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0 25px 0;
+      background: #18181b;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    .data-table th, .data-table td {
+      padding: 10px 15px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
+    }
+    .data-table th {
+      background: #27272a;
+      color: var(--text-main);
+      font-family: var(--font-heading);
+    }
+
+    /* INTERACTIVE BLOCK CONTAINER */
+    .interactive-box {
+      background: #18181b;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 20px 0;
+      min-height: 220px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 15px;
+    }
+    .block-column {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .block-column:hover {
+      background: #27272a;
+    }
+    .block-unit {
+      width: 45px;
+      height: 25px;
+      background: var(--accent-light);
+      border: 1px solid var(--accent-black);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-black);
+      font-size: 12px;
+      font-weight: 700;
+      font-family: var(--font-heading);
+    }
+
+    /* QUIZ & OPTIONS */
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .option-btn {
+      background: #27272a;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 12px 16px;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    .option-btn:hover {
+      border-color: var(--text-muted);
+      background: #3f3f46;
+    }
+    .option-btn.selected {
+      background: var(--accent-white);
+      color: var(--accent-black);
+      font-weight: 700;
+    }
+
+    .input-box {
+      width: 100%;
+      padding: 12px;
+      background: #27272a;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 8px;
+      margin: 15px 0;
+      font-size: 15px;
+    }
+
+    .feedback {
+      padding: 12px;
+      border-radius: 8px;
+      margin: 15px 0;
+      font-weight: 700;
+    }
+    .feedback.correct {
+      background: #27272a;
+      border: 1px solid var(--accent-light);
+      color: var(--accent-light);
+    }
+    .feedback.wrong {
+      background: #3f3f46;
+      border: 1px solid #71717a;
+      color: #f4f4f5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <div class="bg-icon bg-1">📊</div>
+    <div class="bg-icon bg-2">x̄</div>
+
+    <header>
+      <div class="brand">
+        STATIFY <span class="brand-tag">v1.0</span>
+      </div>
+      <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="showPage('page-menu')">🏠 Menu</button>
+    </header>
+
+    <!-- 1. HALAMAN COVER -->
+    <div id="page-cover" class="page active">
+      <div class="cover-content">
+        <h1 class="cover-title">STATIFY</h1>
+        <p class="cover-subtitle">Cara Seru Pahami Statistika Tanpa Sekadar Hafal Rumus</p>
+        <p>Media Pembelajaran Interaktif Penemuan Konsep Ukuran Pemusatan Data (Mean, Median, Modus)</p>
+        <button class="btn" onclick="showPage('page-cp-tp')">🚀 Mulai Belajar</button>
+      </div>
+    </div>
+
+    <!-- 2. HALAMAN CAPAIAN & TUJUAN PEMBELAJARAN -->
+    <div id="page-cp-tp" class="page">
+      <h2>Capaian & Tujuan Pembelajaran</h2>
+      <div style="background: #18181b; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 15px;">
+        <h3 style="font-size: 15px; color: var(--accent-light);">Capaian Pembelajaran</h3>
+        <p style="margin-bottom: 0;">Merumuskan pertanyaan, mengumpulkan, menyajikan, dan menganalisis data untuk menjawab pertanyaan dari situasi atau masalah untuk menentukan dan menafsirkan rerata (mean), median, dan modus.</p>
+      </div>
+
+      <div style="background: #18181b; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+        <h3 style="font-size: 15px; color: var(--accent-light);">Tujuan Pembelajaran</h3>
+        <ul style="color: var(--text-muted); margin-left: 20px; line-height: 1.8; font-size: 14px;">
+          <li>Mengonstruksi pemahaman konsep dan menghitung nilai <b>Mean</b> melalui simulasi pemerataan balok digital.</li>
+          <li>Menentukan nilai <b>Median</b> data tunggal melalui aktivitas pengurutan dan posisi tengah.</li>
+          <li>Mengidentifikasi dan menentukan <b>Modus</b> data tunggal melalui simulasi pengelompokan balok frekuensi.</li>
+        </ul>
+      </div>
+      <button class="btn" onclick="showPage('page-menu')">Lanjut ke Menu Utama ➔</button>
+    </div>
+
+    <!-- 3. HALAMAN MENU UTAMA -->
+    <div id="page-menu" class="page">
+      <h2>Menu Utama Pembelajaran</h2>
+      <p>Selesaikan setiap materi secara berurutan untuk membuka materi berikutnya.</p>
+
+      <div class="menu-grid">
+        <div class="menu-card" onclick="startModule('mean')">
+          <span class="badge" id="badge-mean">🔓 Terbuka</span>
+          <h3>1. Mean</h3>
+          <p style="font-size: 12px; margin: 0;">Pemerataan Balok & Rata-rata</p>
+        </div>
+
+        <div id="card-median" class="menu-card locked" onclick="startModule('median')">
+          <span class="badge" id="badge-median">🔒 Terkunci</span>
+          <h3>2. Median</h3>
+          <p style="font-size: 12px; margin: 0;">Pengurutan & Nilai Tengah</p>
+        </div>
+
+        <div id="card-modus" class="menu-card locked" onclick="startModule('modus')">
+          <span class="badge" id="badge-modus">🔒 Terkunci</span>
+          <h3>3. Modus</h3>
+          <p style="font-size: 12px; margin: 0;">Pengelompokan & Frekuensi</p>
+        </div>
+
+        <div id="card-kuis" class="menu-card locked" onclick="startModule('kuis')">
+          <span class="badge" id="badge-kuis">🔒 Terkunci</span>
+          <h3>4. Kuis Akhir</h3>
+          <p style="font-size: 12px; margin: 0;">Evaluasi 10 Soal</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. SUB-MATERI: MEAN (EKSPLORASI) -->
+    <div id="page-mean-sim" class="page">
+      <h2>Eksplorasi Mean: Pemerataan Balok</h2>
+      <p>Klik tumpukan balok yang <b>paling tinggi</b> untuk memindahkan 1 balok ke tumpukan lain hingga <b>seluruh tumpukan sama rata</b>!</p>
+
+      <div id="mean-block-container" class="interactive-box"></div>
+      <p id="mean-sim-status" style="text-align: center; font-weight: 700;"></p>
+
+      <div id="mean-guiding-q" style="display: none; background: #27272a; padding: 15px; border-radius: 8px;">
+        <p><b>Soal Pemantik:</b></p>
+        <p>1. Berapa tinggi tiap tumpukan setelah diratakan? <b>4 Balok</b></p>
+        <p>2. Jumlah total balok = 16. Jumlah tumpukan = 4. Maka: 16 ÷ 4 = <b>4</b>.</p>
+        <button class="btn" onclick="showPage('page-mean-summary')">Pahami Rumus Mean ➔</button>
+      </div>
+    </div>
+
+    <!-- MEAN RANGKUMAN -->
+    <div id="page-mean-summary" class="page">
+      <h2>Rangkuman Konsep Mean</h2>
+      <div style="background: #18181b; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+        <p><b>Mean</b> adalah nilai rata-rata dari suatu sekumpulan data yang diperoleh dengan menjumlahkan seluruh nilai data kemudian dibagi dengan banyaknya data.</p>
+        <p style="font-size: 18px; text-align: center; color: var(--accent-light); margin: 15px 0; font-family: var(--font-heading);">
+          <b>Mean (x̄) = (Jumlah Seluruh Data) ÷ (Banyak Data)</b>
+        </p>
+      </div>
+      <button class="btn" onclick="initMeanPractice()">Mulai Latihan Soal Mean ➔</button>
+    </div>
+
+    <!-- MEAN LATIHAN SOAL -->
+    <div id="page-mean-practice" class="page">
+      <h2>Latihan Soal Mean</h2>
+      <div id="mean-quiz-content"></div>
+    </div>
+
+    <!-- 5. SUB-MATERI: MEDIAN (EKSPLORASI) -->
+    <div id="page-median-sim" class="page">
+      <h2>Eksplorasi Median: Pengurutan & Nilai Tengah</h2>
+      <p>Klik tombol di bawah untuk <b>mengurutkan balok dari yang terkecil ke terbesar</b>, lalu pilih balok yang berada tepat di <b>posisi tengah</b>!</p>
+
+      <div id="median-block-container" class="interactive-box"></div>
+      <div style="text-align: center; margin-bottom: 15px;">
+        <button id="btn-sort-median" class="btn btn-secondary" onclick="sortMedianBlocks()">Urutkan Balok ➔</button>
+      </div>
+
+      <div id="median-guiding-q" style="display: none; background: #27272a; padding: 15px; border-radius: 8px;">
+        <p><b>Soal Pemantik:</b></p>
+        <p>1. Mengapa data harus diurutkan terlebih dahulu? Agar dapat menemukan titik tengah yang membagi data menjadi 2 bagian sama banyak.</p>
+        <p>2. Balok di posisi tengah adalah <b>5</b>.</p>
+        <button class="btn" onclick="showPage('page-median-summary')">Pahami Rumus Median ➔</button>
+      </div>
+    </div>
+
+    <!-- MEDIAN RANGKUMAN -->
+    <div id="page-median-summary" class="page">
+      <h2>Rangkuman Konsep Median</h2>
+      <div style="background: #18181b; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+        <p><b>Median (Me)</b> adalah nilai tengah dari kumpulan data yang <b>telah diurutkan</b> dari nilai terkecil hingga terbesar.</p>
+        <ul style="margin-left: 20px; color: var(--text-muted); line-height: 1.8;">
+          <li><b>Data Ganjil:</b> Nilai tepat pada posisi tengah.</li>
+          <li><b>Data Genap:</b> Rata-rata dari dua nilai yang berada di posisi tengah.</li>
+        </ul>
+      </div>
+      <button class="btn" onclick="initMedianPractice()">Mulai Latihan Soal Median ➔</button>
+    </div>
+
+    <!-- MEDIAN LATIHAN SOAL -->
+    <div id="page-median-practice" class="page">
+      <h2>Latihan Soal Median</h2>
+      <div id="median-quiz-content"></div>
+    </div>
+
+    <!-- 6. SUB-MATERI: MODUS (EKSPLORASI) -->
+    <div id="page-modus-sim" class="page">
+      <h2>Eksplorasi Modus: Pengelompokan & Frekuensi</h2>
+      <p>Amati kelompok balok berikut. Klik kelompok balok yang memuat <b>jumlah terbanyak / paling sering muncul</b>!</p>
+
+      <div id="modus-block-container" class="interactive-box"></div>
+
+      <div id="modus-guiding-q" style="display: none; background: #27272a; padding: 15px; border-radius: 8px;">
+        <p><b>Soal Pemantik:</b></p>
+        <p>Angka <b>7</b> muncul sebanyak 3 kali (paling banyak dibandingkan angka lainnya).</p>
+        <p>Maka Modus dari data tersebut adalah <b>7</b>.</p>
+        <button class="btn" onclick="showPage('page-modus-summary')">Pahami Rumus Modus ➔</button>
+      </div>
+    </div>
+
+    <!-- MODUS RANGKUMAN -->
+    <div id="page-modus-summary" class="page">
+      <h2>Rangkuman Konsep Modus</h2>
+      <div style="background: #18181b; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+        <p><b>Modus (Mo)</b> adalah nilai data yang <b>paling sering muncul</b> atau memiliki frekuensi terbanyak.</p>
+        <p style="color: var(--text-muted); font-size: 14px;">Catatan: Suatu data bisa memiliki 1 modus, lebih dari 1 modus, atau tidak memiliki modus jika semua angka muncul sama banyaknya.</p>
+      </div>
+      <button class="btn" onclick="initModusPractice()">Mulai Latihan Soal Modus ➔</button>
+    </div>
+
+    <!-- MODUS LATIHAN SOAL -->
+    <div id="page-modus-practice" class="page">
+      <h2>Latihan Soal Modus</h2>
+      <div id="modus-quiz-content"></div>
+    </div>
+
+    <!-- 7. HALAMAN KUIS AKHIR -->
+    <div id="page-kuis" class="page">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Kuis Evaluasi Statistika</h2>
+        <span id="kuis-progress" style="font-weight: 700; color: var(--accent-light); font-family: var(--font-heading);">Soal 1 / 10</span>
+      </div>
+      <div id="kuis-container"></div>
+    </div>
+
+    <!-- HALAMAN HASIL KUIS -->
+    <div id="page-kuis-result" class="page">
+      <div style="text-align: center; padding: 20px 0;">
+        <h2>Hasil Kuis Evaluasi</h2>
+        <div style="font-size: 72px; font-weight: 800; color: var(--accent-white); margin: 20px 0; font-family: var(--font-heading);" id="final-score">0</div>
+        <p id="final-predikat" style="font-size: 18px; font-weight: 700; color: var(--text-muted);"></p>
+        <button class="btn" onclick="showPage('page-menu')">Kembali ke Menu Utama 🏠</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let state = {
+      meanDone: false,
+      medianDone: false,
+      modusDone: false
+    };
+
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+    }
+
+    function updateMenuState() {
+      if (state.meanDone) {
+        let el = document.getElementById('card-median');
+        el.classList.remove('locked');
+        document.getElementById('badge-median').innerText = "🔓 Terbuka";
+      }
+      if (state.medianDone) {
+        let el = document.getElementById('card-modus');
+        el.classList.remove('locked');
+        document.getElementById('badge-modus').innerText = "🔓 Terbuka";
+      }
+      if (state.modusDone) {
+        let el = document.getElementById('card-kuis');
+        el.classList.remove('locked');
+        document.getElementById('badge-kuis').innerText = "🔓 Terbuka";
+      }
+    }
+
+    function startModule(mod) {
+      if (mod === 'mean') {
+        initMeanSim();
+        showPage('page-mean-sim');
+      } else if (mod === 'median') {
+        if (!state.meanDone) return alert("Selesaikan materi Mean terlebih dahulu!");
+        initMedianSim();
+        showPage('page-median-sim');
+      } else if (mod === 'modus') {
+        if (!state.medianDone) return alert("Selesaikan materi Median terlebih dahulu!");
+        initModusSim();
+        showPage('page-modus-sim');
+      } else if (mod === 'kuis') {
+        if (!state.modusDone) return alert("Selesaikan materi Modus terlebih dahulu!");
+        startKuis();
+        showPage('page-kuis');
+      }
+    }
+
+    let meanHeights = [6, 2, 5, 3];
+    function initMeanSim() {
+      meanHeights = [6, 2, 5, 3];
+      renderMeanSim();
+    }
+
+    function renderMeanSim() {
+      const box = document.getElementById('mean-block-container');
+      box.innerHTML = '';
+      let isFlat = meanHeights.every(val => val === meanHeights[0]);
+
+      meanHeights.forEach((h, idx) => {
+        let col = document.createElement('div');
+        col.className = 'block-column';
+        col.onclick = () => moveMeanBlock(idx);
+
+        for (let i = 0; i < h; i++) {
+          let b = document.createElement('div');
+          b.className = 'block-unit';
+          b.innerText = '■';
+          col.appendChild(b);
+        }
+        box.appendChild(col);
+      });
+
+      const status = document.getElementById('mean-sim-status');
+      if (isFlat) {
+        status.innerText = "🎉 Selamat! Semua tumpukan balok sudah sama rata (4 balok per tumpukan).";
+        document.getElementById('mean-guiding-q').style.display = "block";
+      } else {
+        status.innerText = "Klik tumpukan yang paling tinggi untuk memindahkan 1 balok.";
+        document.getElementById('mean-guiding-q').style.display = "none";
+      }
+    }
+
+    function moveMeanBlock(colIdx) {
+      let maxH = Math.max(...meanHeights);
+      if (meanHeights[colIdx] === maxH) {
+        let minH = Math.min(...meanHeights);
+        let targetIdx = meanHeights.indexOf(minH);
+        meanHeights[colIdx]--;
+        meanHeights[targetIdx]++;
+        renderMeanSim();
+      }
+    }
+
+    let meanStep = 0;
+    const meanQuestions = [
+      {
+        text: "Diberikan sekumpulan data tunggal pada tabel berikut:",
+        table: [["Data Ke-", "1", "2", "3", "4", "5"], ["Nilai", "12", "15", "14", "18", "11"]],
+        options: ["13", "14", "15", "16"],
+        answer: 1
+      },
+      {
+        text: "Tentukan nilai Mean dari sekumpulan data pada tabel berikut:",
+        table: [["Data Ke-", "1", "2", "3", "4", "5", "6", "7", "8"], ["Nilai", "9", "8", "5", "7", "11", "6", "10", "8"]],
+        options: ["7", "8", "9", "10"],
+        answer: 1
+      }
+    ];
+
+    function initMeanPractice() {
+      meanStep = 0;
+      renderMeanQuestion();
+      showPage('page-mean-practice');
+    }
+
+    function renderMeanQuestion() {
+      const q = meanQuestions[meanStep];
+      const cont = document.getElementById('mean-quiz-content');
+      let tableHtml = `<table class="data-table">`;
+      q.table.forEach(row => {
+        tableHtml += `<tr>` + row.map(cell => `<td>${cell}</td>`).join('') + `</tr>`;
+      });
+      tableHtml += `</table>`;
+
+      cont.innerHTML = `
+        <p><b>Soal ${meanStep + 1} dari 2:</b> ${q.text}</p>
+        ${tableHtml}
+        <div class="options-group">
+          ${q.options.map((opt, i) => `<button class="option-btn" onclick="checkMeanAns(${i})">${String.fromCharCode(65+i)}.${opt}</button>`).join('')}
+        </div>
+        <div id="mean-feedback"></div>
+      `;
+    }
+
+    function checkMeanAns(idx) {
+      const q = meanQuestions[meanStep];
+      const fb = document.getElementById('mean-feedback');
+      if (idx === q.answer) {
+        fb.className = "feedback correct";
+        fb.innerHTML = "✅ Jawaban Benar!";
+        setTimeout(() => {
+          meanStep++;
+          if (meanStep < meanQuestions.length) {
+            renderMeanQuestion();
+          } else {
+            state.meanDone = true;
+            updateMenuState();
+            alert("Selamat! Anda telah menyelesaikan sub-materi Mean.");
+            showPage('page-menu');
+          }
+        }, 1000);
+      } else {
+        fb.className = "feedback wrong";
+        fb.innerHTML = "❌ Jawaban belum tepat, silakan hitung kembali.";
+      }
+    }
+
+    let medianData = [7, 2, 9, 4, 5];
+    let medianSorted = false;
+
+    function initMedianSim() {
+      medianData = [7, 2, 9, 4, 5];
+      medianSorted = false;
+      document.getElementById('btn-sort-median').style.display = "inline-block";
+      document.getElementById('median-guiding-q').style.display = "none";
+      renderMedianSim();
+    }
+
+    function renderMedianSim() {
+      const box = document.getElementById('median-block-container');
+      box.innerHTML = '';
+      medianData.forEach((val, idx) => {
+        let col = document.createElement('div');
+        col.className = 'block-column';
+        col.onclick = () => pickMedianBlock(idx);
+
+        for (let i = 0; i < val; i++) {
+          let b = document.createElement('div');
+          b.className = 'block-unit';
+          if (i === val - 1) b.innerText = val;
+          col.appendChild(b);
+        }
+        box.appendChild(col);
+      });
+    }
+
+    function sortMedianBlocks() {
+      medianData.sort((a,b) => a - b);
+      medianSorted = true;
+      document.getElementById('btn-sort-median').style.display = "none";
+      renderMedianSim();
+      alert("Balok telah diurutkan dari terkecil ke terbesar! Sekarang klik balok yang berada di posisi paling tengah.");
+    }
+
+    function pickMedianBlock(idx) {
+      if (!medianSorted) return alert("Urutkan balok terlebih dahulu sebelum memilih nilai tengah!");
+      if (idx === 2) {
+        alert("Benar! Angka 5 berada tepat di tengah-tengah.");
+        document.getElementById('median-guiding-q').style.display = "block";
+      } else {
+        alert("Bukan balok tersebut. Pilih balok yang posisinya berada tepat di tengah!");
+      }
+    }
+
+    let medianStep = 0;
+    const medianQuestions = [
+      {
+        text: "Tentukan nilai Median dari sekumpulan data tunggal berikut:",
+        table: [["Data Ke-", "1", "2", "3", "4", "5", "6", "7"], ["Nilai", "3", "7", "2", "9", "4", "8", "5"]],
+        options: ["4", "5", "7", "8"],
+        answer: 1
+      },
+      {
+        text: "Hitunglah median dari kelompok data tunggal genap berikut:",
+        table: [["Data Ke-", "1", "2", "3", "4", "5", "6"], ["Nilai", "14", "9", "12", "8", "11", "16"]],
+        options: ["10.5", "11", "11.5", "12"],
+        answer: 2
+      }
+    ];
+
+    function initMedianPractice() {
+      medianStep = 0;
+      renderMedianQuestion();
+      showPage('page-median-practice');
+    }
+
+    function renderMedianQuestion() {
+      const q = medianQuestions[medianStep];
+      const cont = document.getElementById('median-quiz-content');
+      let tableHtml = `<table class="data-table">`;
+      q.table.forEach(row => {
+        tableHtml += `<tr>` + row.map(cell => `<td>${cell}</td>`).join('') + `</tr>`;
+      });
+      tableHtml += `</table>`;
+
+      cont.innerHTML = `
+        <p><b>Soal ${medianStep + 1} dari 2:</b> ${q.text}</p>
+        ${tableHtml}
+        <div class="options-group">
+          ${q.options.map((opt, i) => `<button class="option-btn" onclick="checkMedianAns(${i})">${String.fromCharCode(65+i)}.${opt}</button>`).join('')}
+        </div>
+        <div id="median-feedback"></div>
+      `;
+    }
+
+    function checkMedianAns(idx) {
+      const q = medianQuestions[medianStep];
+      const fb = document.getElementById('median-feedback');
+      if (idx === q.answer) {
+        fb.className = "feedback correct";
+        fb.innerHTML = "✅ Jawaban Benar!";
+        setTimeout(() => {
+          medianStep++;
+          if (medianStep < medianQuestions.length) {
+            renderMedianQuestion();
+          } else {
+            state.medianDone = true;
+            updateMenuState();
+            alert("Selamat! Anda telah menyelesaikan sub-materi Median.");
+            showPage('page-menu');
+          }
+        }, 1000);
+      } else {
+        fb.className = "feedback wrong";
+        fb.innerHTML = "❌ Jawaban belum tepat, ingat untuk mengurutkan data terlebih dahulu.";
+      }
+    }
+
+    function initModusSim() {
+      const box = document.getElementById('modus-block-container');
+      box.innerHTML = '';
+      document.getElementById('modus-guiding-q').style.display = "none";
+
+      const groups = [
+        { val: 4, count: 1 },
+        { val: 5, count: 1 },
+        { val: 6, count: 1 },
+        { val: 7, count: 3 },
+        { val: 8, count: 1 },
+        { val: 9, count: 1 }
+      ];
+
+      groups.forEach((g) => {
+        let col = document.createElement('div');
+        col.className = 'block-column';
+        col.onclick = () => pickModusGroup(g.val);
+
+        for (let i = 0; i < g.count; i++) {
+          let b = document.createElement('div');
+          b.className = 'block-unit';
+          b.innerText = g.val;
+          col.appendChild(b);
+        }
+        box.appendChild(col);
+      });
+    }
+
+    function pickModusGroup(val) {
+      if (val === 7) {
+        alert("Benar! Angka 7 muncul terbanyak yaitu 3 kali.");
+        document.getElementById('modus-guiding-q').style.display = "block";
+      } else {
+        alert("Bukan kelompok ini. Cari tumpukan angka yang paling banyak/tinggi!");
+      }
+    }
+
+    let modusStep = 0;
+    const modusQuestions = [
+      {
+        text: "Tentukan nilai Modus dari kelompok data tunggal berikut:",
+        table: [["Data Ke-", "1", "2", "3", "4", "5", "6", "7", "8"], ["Nilai", "4", "7", "5", "8", "7", "6", "7", "9"]],
+        options: ["5", "6", "7", "8"],
+        answer: 2
+      },
+      {
+        text: "Tentukan modus dari kelompok data berikut:",
+        table: [["Data Ke-", "1", "2", "3", "4", "5", "6", "7", "8"], ["Nilai", "3", "8", "5", "8", "6", "5", "9", "10"]],
+        options: ["Hanya 5", "Hanya 8", "5 dan 8", "Tidak ada modus"],
+        answer: 2
+      }
+    ];
+
+    function initModusPractice() {
+      modusStep = 0;
+      renderModusQuestion();
+      showPage('page-modus-practice');
+    }
+
+    function renderModusQuestion() {
+      const q = modusQuestions[modusStep];
+      const cont = document.getElementById('modus-quiz-content');
+      let tableHtml = `<table class="data-table">`;
+      q.table.forEach(row => {
+        tableHtml += `<tr>` + row.map(cell => `<td>${cell}</td>`).join('') + `</tr>`;
+      });
+      tableHtml += `</table>`;
+
+      cont.innerHTML = `
+        <p><b>Soal ${modusStep + 1} dari 2:</b> ${q.text}</p>
+        ${tableHtml}
+        <div class="options-group">
+          ${q.options.map((opt, i) => `<button class="option-btn" onclick="checkModusAns(${i})">${String.fromCharCode(65+i)}.${opt}</button>`).join('')}
+        </div>
+        <div id="modus-feedback"></div>
+      `;
+    }
+
+    function checkModusAns(idx) {
+      const q = modusQuestions[modusStep];
+      const fb = document.getElementById('modus-feedback');
+      if (idx === q.answer) {
+        fb.className = "feedback correct";
+        fb.innerHTML = "✅ Jawaban Benar!";
+        setTimeout(() => {
+          modusStep++;
+          if (modusStep < modusQuestions.length) {
+            renderModusQuestion();
+          } else {
+            state.modusDone = true;
+            updateMenuState();
+            alert("Selamat! Anda telah menyelesaikan seluruh sub-materi. Kuis Akhir telah terbuka!");
+            showPage('page-menu');
+          }
+        }, 1000);
+      } else {
+        fb.className = "feedback wrong";
+        fb.innerHTML = "❌ Jawaban belum tepat, silakan amati angka yang paling sering muncul.";
+      }
+    }
+
+    let kuisIndex = 0;
+    let kuisAnswers = [];
+
+    const kuisData = [
+      {
+        type: "pg",
+        q: "Tentukan nilai mean dari data berikut: 12, 15, 18, 14, 16, 20, 11, 13, 17, 19, 15, 14, 16, 10",
+        opts: ["14", "15", "16", "17"],
+        key: 1
+      },
+      {
+        type: "pg",
+        q: "Tentukan nilai median dari data berikut: 14, 22, 18, 12, 25, 16, 20, 11, 24, 15, 19, 13, 21, 17, 23, 10, 26, 15, 18, 20, 16",
+        opts: ["17", "18", "19", "20"],
+        key: 1
+      },
+      {
+        type: "pg",
+        q: "Tentukan nilai modus dari data berikut: 12, 15, 14, 16, 15, 13, 17, 15, 14, 18, 12, 15, 16, 13, 15, 17, 14, 11, 15, 16, 14",
+        opts: ["14", "15", "16", "17"],
+        key: 1
+      },
+      {
+        type: "pg",
+        q: "Nilai rata-rata dari 10 siswa 8A adalah 80, nilai rata-rata dari 10 siswa kelas 8B adalah 90. Tentukan nilai rata-rata dari semua siswa kelas 8!",
+        opts: ["83", "84", "85", "86"],
+        key: 2
+      },
+      {
+        type: "pg",
+        q: "Sekumpulan data tunggal terdiri dari 7 bilangan: 6, 7, 8, 6, 9, x, 7. Jika rata-rata (Mean) dari data tersebut adalah 7, tentukan nilai Modus dari kelompok data tersebut!",
+        opts: ["6", "7", "8", "9"],
+        key: 0
+      },
+      {
+        type: "isian",
+        q: "Diketahui tabel frekuensi nilai matematika: Nilai 60 (3 anak), 70 (5 anak), 80 (8 anak), 90 (4 anak). Tentukan nilai Mean-nya!",
+        key: "76.5"
+      },
+      {
+        type: "isian",
+        q: "Tentukan median dari kelompok data tinggi badan berikut: 150, 152, 154, 155, 158, 160.",
+        key: "154.5"
+      },
+      {
+        type: "isian",
+        q: "Tentukan modus dari sekumpulan nilai ulangan: 7, 8, 6, 8, 9, 7, 8, 10, 8, 6.",
+        key: "8"
+      },
+      {
+        type: "pg",
+        q: "Pernyataan manakah yang paling tepat mengenai pengertian Median?",
+        opts: ["Nilai yang paling sering muncul", "Nilai tengah setelah data diurutkan", "Jumlah seluruh nilai dibagi banyak data", "Selisih data terbesar dan terkecil"],
+        key: 1
+      },
+      {
+        type: "isian",
+        q: "Jika lima data memiliki nilai 10, 12, 14, 16, dan y, serta nilai rata-ratanya adalah 15, berapakah nilai y?",
+        key: "23"
+      }
+    ];
+
+    function startKuis() {
+      kuisIndex = 0;
+      kuisAnswers = new Array(kuisData.length).fill(null);
+      renderKuisItem();
+    }
+
+    function renderKuisItem() {
+      document.getElementById('kuis-progress').innerText = `Soal ${kuisIndex + 1} / ${kuisData.length}`;
+      const item = kuisData[kuisIndex];
+      const cont = document.getElementById('kuis-container');
+
+      let html = `<p style="font-size: 16px; font-weight: bold; margin-bottom: 15px;">${item.q}</p>`;
+
+      if (item.type === 'pg') {
+        html += `<div class="options-group">`;
+        item.opts.forEach((opt, idx) => {
+          let sel = kuisAnswers[kuisIndex] === idx ? 'selected' : '';
+          html += `<button class="option-btn ${sel}" onclick="selectKuisPg(${idx})">${String.fromCharCode(65+idx)}. ${opt}</button>`;
+        });
+        html += `</div>`;
+      } else {
+        let val = kuisAnswers[kuisIndex] !== null ? kuisAnswers[kuisIndex] : '';
+        html += `<input type="text" id="kuis-input-ans" class="input-box" placeholder="Ketikkan jawaban berupa angka..." value="${val}" oninput="saveKuisIsian(this.value)">`;
+      }
+
+      html += `
+        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+          <button class="btn btn-secondary" onclick="prevKuis()" ${kuisIndex === 0 ? 'disabled' : ''}>← Soal Sebelumnya</button>
+          <button class="btn" onclick="nextKuis()">${kuisIndex === kuisData.length - 1 ? 'Selesai & Lihat Skor 🏆' : 'Soal Berikutnya ➔'}</button>
+        </div>
+      `;
+
+      cont.innerHTML = html;
+    }
+
+    function selectKuisPg(idx) {
+      kuisAnswers[kuisIndex] = idx;
+      renderKuisItem();
+    }
+
+    function saveKuisIsian(val) {
+      kuisAnswers[kuisIndex] = val.trim();
+    }
+
+    function prevKuis() {
+      if (kuisIndex > 0) {
+        kuisIndex--;
+        renderKuisItem();
+      }
+    }
+
+    function nextKuis() {
+      if (kuisIndex < kuisData.length - 1) {
+        kuisIndex++;
+        renderKuisItem();
+      } else {
+        finishKuis();
+      }
+    }
+
+    function finishKuis() {
+      let score = 0;
+      kuisData.forEach((item, idx) => {
+        let userAns = kuisAnswers[idx];
+        if (item.type === 'pg') {
+          if (userAns === item.key) score += 10;
+        } else {
+          if (userAns !== null && userAns.toString().replace(',', '.') === item.key.toString()) score += 10;
+        }
+      });
+
+      document.getElementById('final-score').innerText = score;
+      let pred = "";
+      if (score >= 80) pred = "🌟 Sangat Baik! Kamu sudah menguasai konsep Statistika Dasar.";
+      else if (score >= 60) pred = "👍 Cukup Baik! Pelajari kembali materi yang belum kamu pahami.";
+      else pred = "💪 Jangan Menyerah! Ulangi kembali simulasi balok untuk memperkuat pemahaman.";
+
+      document.getElementById('final-predikat').innerText = pred;
+      showPage('page-kuis-result');
+    }
+  </script>
+</body>
+</html>
